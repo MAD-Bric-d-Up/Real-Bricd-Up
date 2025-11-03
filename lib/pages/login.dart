@@ -1,3 +1,4 @@
+import 'package:bricd_up/components/navbar.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -12,6 +13,8 @@ class _LoginState extends State<Login> {
   // Username and Password Text Controllers
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  bool _passwordVisible = true;
 
   /// Good practice to dispose to prevent memory leaks
   @override
@@ -28,26 +31,20 @@ class _LoginState extends State<Login> {
       backgroundColor: const Color(0xFFECF4E8), // body bg color
 
       // NavBar at top of screen
-      appBar: AppBar(
-        leading: const IconButton(
-          onPressed: null, 
+      appBar: const NavBar(
+        title: "Bric'd Up",
+        actions: [
+          IconButton(
+            onPressed: null,
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+          )
+        ],
+        leading: IconButton(
+          onPressed: null,
           icon: Icon(Icons.menu),
           tooltip: 'Navigation Menu',
         ),
-        title: const Text(
-          "Bric'd Up!",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        actions: const [
-          IconButton(
-            onPressed: null, 
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-          ),
-        ],
-        backgroundColor: const Color(0xFFABE7B2),
       ),
 
       // Main Body Content Here
@@ -73,11 +70,22 @@ class _LoginState extends State<Login> {
             // Password Input
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Enter Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                  },
+                  icon: Icon(
+                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  )
+                )
               ),
+              obscureText: _passwordVisible,
             ),
 
             // spacer
