@@ -11,5 +11,9 @@ To download libraries and necessary files:
 $ flutter pub get  
 
 
+If there's errors still with camera, try:  
+$ flutter pub add camera  
+
+
 To run locally on chrome:  
 $ flutter run -d chrome  
