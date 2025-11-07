@@ -15,5 +15,23 @@ If there's errors still with camera, try:
 $ flutter pub add camera  
 
 
+Install firebase cli:  
+$ npm install -g firebase-tools  
+
+
+Login to firebase on terminal in flutter project:  
+$ firebase login  
+
+
+Activate flutterfire cli:  
+$ dart pub global activate flutterfire_cli  
+
+
+Configure flutterfire:  
+$ flutterfire configure --project=bric-d-up  
+OR IF THAT DOESN'T WORK:  
+$ flutterfire.bat configure --project=bric-d-up  
+
+
 To run locally on chrome:  
 $ flutter run -d chrome  
