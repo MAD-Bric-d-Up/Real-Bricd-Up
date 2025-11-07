@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "848693712083",
+    "project_id": "bric-d-up",
+    "storage_bucket": "bric-d-up.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848693712083:android:dc68424edf1837be27f026",
+        "android_client_info": {
+          "package_name": "com.example.bricd_up"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqAZIwyQBUzoldGDN5h5zme-LilZhRCfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
