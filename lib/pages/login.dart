@@ -1,3 +1,4 @@
+import 'package:bricd_up/components/appbar.dart';
 import 'package:bricd_up/components/navbar.dart';
 import 'package:flutter/material.dart';
 
@@ -28,24 +29,9 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // Scaffolds are basic visual structures that act as a foundation layout for a screen
     return Scaffold(
-      backgroundColor: const Color(0xFFECF4E8), // body bg color
-
-      // NavBar at top of screen
-      appBar: const NavBar(
-        title: "Bric'd Up",
-        actions: [
-          IconButton(
-            onPressed: null,
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-          )
-        ],
-        leading: IconButton(
-          onPressed: null,
-          icon: Icon(Icons.menu),
-          tooltip: 'Navigation Menu',
-        ),
-      ),
+      backgroundColor: const Color(0xFF005030), // body bg color
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
 
       // Main Body Content Here
       body: Padding(
