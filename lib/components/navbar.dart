@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// This defines the navigation bar at the bottom of the screen
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
 
   const NavBar({
@@ -24,12 +25,12 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       child: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
             label: 'Home',
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.message),
+            icon: Icon(Icons.message_outlined),
             label: 'Forum',
           ),
 
@@ -39,12 +40,15 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outlined),
             label: 'Profile',
           ),
         ],
         selectedItemColor: const Color(0xFFFFB81C),
         unselectedItemColor: Colors.black,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
       ),
     );
     

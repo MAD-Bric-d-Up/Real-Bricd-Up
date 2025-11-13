@@ -1,3 +1,4 @@
+import 'package:bricd_up/components/appbar.dart';
 import 'package:bricd_up/components/navbar.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class _LoginState extends State<Login> {
     // Scaffolds are basic visual structures that act as a foundation layout for a screen
     return Scaffold(
       backgroundColor: const Color(0xFF005030), // body bg color
-      
+      appBar: const CustomAppBar(),
       bottomNavigationBar: const NavBar(),
 
       // Main Body Content Here
