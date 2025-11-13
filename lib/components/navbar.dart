@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
 
   const NavBar({
     super.key,
-    required this.title,
-    this.actions,
-    this.leading,
   });
 
   @override
@@ -21,17 +15,40 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       tooltip: 'Navigation Menu',
     );
 
-    return AppBar(
-      leading: leading ?? defaultLeadingIcon,
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.white,
-        ),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
       ),
-      actions: actions,
-      backgroundColor: const Color(0xFFABE782),
+      child: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Forum',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt_outlined),
+            label: 'Camera',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        selectedItemColor: const Color(0xFFFFB81C),
+        unselectedItemColor: Colors.black,
+      ),
     );
+    
+    
   }
 
   @override
