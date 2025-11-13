@@ -1,3 +1,4 @@
+import 'package:bricd_up/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// This defines the navigation bar at the bottom of the screen
@@ -48,6 +49,7 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
         unselectedItemColor: Colors.black,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        backgroundColor: AppColors.primaryBeige,
         type: BottomNavigationBarType.fixed,
       ),
     );
