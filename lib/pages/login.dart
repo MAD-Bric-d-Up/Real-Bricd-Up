@@ -1,6 +1,16 @@
-import 'package:bricd_up/components/appbar.dart';
-import 'package:bricd_up/components/navbar.dart';
+import 'package:bricd_up/components/google_sign_in.dart';
+import 'package:bricd_up/constants/app_colors.dart';
+import 'package:bricd_up/models/user.dart';
+import 'package:bricd_up/pages/feed.dart';
+import 'package:bricd_up/pages/register.dart';
+import 'package:bricd_up/providers/user_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,8 +21,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   
-  // Username and Password Text Controllers
-  final TextEditingController _usernameController = TextEditingController();
+  // Email and Password Text Controllers
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   bool _passwordVisible = true;
@@ -20,7 +30,7 @@ class _LoginState extends State<Login> {
   /// Good practice to dispose to prevent memory leaks
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -29,84 +39,226 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // Scaffolds are basic visual structures that act as a foundation layout for a screen
     return Scaffold(
-      backgroundColor: const Color(0xFF005030), // body bg color
-      appBar: const CustomAppBar(),
-      bottomNavigationBar: const NavBar(),
+      backgroundColor: AppColors.primaryGreen, // body bg color
 
       // Main Body Content Here
       body: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
 
-            // Username Input
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Enter Username',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "Bric'd Up",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 48,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
-            ),
 
-            // spacer
-            const SizedBox(height: 16.0),
-
-            // Password Input
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Enter Password',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
-                  icon: Icon(
-                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  )
-                )
+              // email Input
+              SizedBox(
+                width: 450,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    prefixIcon: Icon(Icons.mail),
+                    filled: true,
+                    fillColor: AppColors.primaryBeige,
+                  ),
+                ),
               ),
-              obscureText: _passwordVisible,
-            ),
 
-            // spacer
-            const SizedBox(height: 16.0),
+              // spacer
+              const SizedBox(height: 16.0),
 
-            // Login Button
-            ElevatedButton(
-              onPressed: _login, 
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-                backgroundColor: const Color(0xFFABE7B2)
+              // Password Input
+              SizedBox(
+                width: 450,
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.primaryBeige,
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                      )
+                    )
+                  ),
+                  obscureText: _passwordVisible,
+                ),
               ),
-              child: const Text('Login'),
-            ),
 
-          ],
-        )
+              // spacer
+              const SizedBox(height: 16.0),
+
+              // Login Button
+              SizedBox(
+                width: 450,
+                child: ElevatedButton(
+                  onPressed: _handleLogin, 
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    backgroundColor: AppColors.navbarGold,
+                  ),
+                  child: const Text('Login'),
+                ),
+              ),
+
+              // Line Divider
+              SizedBox(
+                width: 450,
+                child: const Divider(
+                  color: Colors.black,
+                  height: 40.0,
+                  thickness: 1,
+                ),
+              ),
+
+              // Google button
+              SizedBox(
+                width: 450,
+                child: GoogleLoginButton(),
+              ),
+
+              GestureDetector(
+                onTap: () => _navRegister(context),
+                child: const Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    'Click here to register!',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              )
+
+            ],
+          ),
+        ) 
       ),
     );
   }
 
-  /// Performs login validation logic and calls backend 
-  /// TODO: setup Firebase Auth and Storage
-  void _login() {
-    String username = _usernameController.text;
+  Future<void> _handleLogin() async {
+    String email = _emailController.text;
     String password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty) {
+    // perform input validation
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Missing username or password field.')),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Username: $username, Password: $password')),
-      );
+      User? user = await _doLogin(email, password);
+
+      if (user != null) {
+        _onLoginSuccess(user);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error logging in.')),
+        );
+      }
     }
   }
+
+  /// Performs login validation logic and calls backend 
+  Future<User?> _doLogin(String email, String password) async {
+    try {
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password
+      );
+
+      return userCredential.user;
+    } on FirebaseAuthException catch (error) {
+      print(error);
+    }
+  }
+
+  void _onLoginSuccess(User user) async {
+
+    Map<String, dynamic>? profileData = await _fetchUserProfileData(user.uid);
+
+    if (profileData != null) {
+      final UserProfile userProfile = UserProfile.fromMap(profileData);
+
+      final model = Provider.of<UserProvider>(context, listen: false);
+
+      model.setUserProfile(userProfile);
+    } else {
+      print('Profile data missing.');
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Feed(),
+      )
+    );
+  }
+
+  Future<Map<String, dynamic>?> _fetchUserProfileData(String uid) async {
+    try {
+      if (FirebaseAuth.instance.currentUser == null) {
+        print("firestone fetch attmpted before session was establisehd");
+        return null;
+      }
+
+      final String activeUid = FirebaseAuth.instance.currentUser!.uid;
+
+      if (activeUid != uid) {
+        print("mismatch in uids");
+        return null;
+      }
+
+      final DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
+
+      if (doc.exists) {
+        return doc.data() as Map<String, dynamic>?;
+      } else {
+        print("User Profile not found for UID: ${uid}");
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  void _navRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Register(),
+      )
+    );
+  }
+
 }
