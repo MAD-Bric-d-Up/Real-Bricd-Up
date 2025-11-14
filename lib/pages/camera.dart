@@ -15,35 +15,35 @@ class _CameraState extends State<Camera> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
-  late List<CameraDescription> _cameras;
-  bool _isLoading = true;
+  // late List<CameraDescription> _cameras;
+  // bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadCameras();
-      _controller = CameraController(
-        widget.camera,
-        ResolutionPreset.medium,
-      );
+    // _loadCameras();
+    _controller = CameraController(
+      widget.camera,
+      ResolutionPreset.medium,
+    );
     _initializeControllerFuture = _controller.initialize();
   }
 
-  Future<void> _loadCameras() async {
-    try {
-      final cameras = await availableCameras();
+  // Future<void> _loadCameras() async {
+  //   try {
+  //     final cameras = await availableCameras();
 
-      setState(() {
-        _cameras = cameras;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        print('Camera Error.');
-        _isLoading = false;
-      });
-    }
-  }
+  //     setState(() {
+  //       _cameras = cameras;
+  //       _isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       print('Camera Error.');
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -88,7 +88,7 @@ class _CameraState extends State<Camera> {
   void _takePicture() async {
     try {
       await _initializeControllerFuture;
-      final image = await _controller.takePicture();
+      // final image = await _controller.takePicture();
     } catch (e) {
       print(e);
     }

@@ -1,5 +1,3 @@
-import 'package:bricd_up/components/appbar.dart';
-import 'package:bricd_up/components/navbar.dart';
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 

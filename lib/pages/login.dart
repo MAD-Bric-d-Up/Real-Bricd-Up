@@ -2,7 +2,6 @@ import 'package:bricd_up/swipeable_pages.dart';
 import 'package:bricd_up/components/google_sign_in.dart';
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:bricd_up/models/user.dart';
-import 'package:bricd_up/pages/feed.dart';
 import 'package:bricd_up/pages/register.dart';
 import 'package:bricd_up/providers/user_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

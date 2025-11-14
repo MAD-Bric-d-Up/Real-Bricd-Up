@@ -1,6 +1,4 @@
-import 'package:bricd_up/pages/camera.dart';
 import 'package:bricd_up/providers/user_provider.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
