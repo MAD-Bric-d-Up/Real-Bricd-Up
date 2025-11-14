@@ -1,29 +1,48 @@
+import 'package:bricd_up/constants/app_colors.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class Camera extends StatefulWidget {
-  const Camera({super.key, required this.camera});
-
   final CameraDescription camera;
 
+  const Camera({super.key, required this.camera});
+
   @override
-  CameraState createState() => CameraState();
+  State<Camera> createState() => _CameraState();
 }
 
-class CameraState extends State<Camera> {
+class _CameraState extends State<Camera> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+
+  late List<CameraDescription> _cameras;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.medium,
-    );
-
+    _loadCameras();
+      _controller = CameraController(
+        widget.camera,
+        ResolutionPreset.medium,
+      );
     _initializeControllerFuture = _controller.initialize();
+  }
+
+  Future<void> _loadCameras() async {
+    try {
+      final cameras = await availableCameras();
+
+      setState(() {
+        _cameras = cameras;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        print('Camera Error.');
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -35,6 +54,7 @@ class CameraState extends State<Camera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryGreen,
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {

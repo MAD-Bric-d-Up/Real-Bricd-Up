@@ -17,15 +17,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  final cameras = await availableCameras();
-
-  final firstCamera = cameras.first;
-
   runApp(
-    // MaterialApp(
-    //   title: "Bric'd Up!",
-    //   home: Login(),
-    // )
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
       child: const MaterialApp(
