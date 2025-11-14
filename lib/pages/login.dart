@@ -1,3 +1,4 @@
+import 'package:bricd_up/swipeable_pages.dart';
 import 'package:bricd_up/components/google_sign_in.dart';
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:bricd_up/models/user.dart';
@@ -220,7 +221,7 @@ class _LoginState extends State<Login> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const Feed(),
+        builder: (context) => const SwipeablePages(),
       )
     );
   }
