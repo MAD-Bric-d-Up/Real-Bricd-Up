@@ -1,11 +1,10 @@
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:bricd_up/pages/login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bricd_up/repository/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -239,20 +238,11 @@ class _RegisterState extends State<Register> {
       await userCredential.user!.updateDisplayName(username);
 
       // write user data to db
-      await _createUserDatabaseEntry(uid, email, username);
+      await UserRepo.instance.createUserDatabaseEntry(uid, email, username);
 
     } on FirebaseAuthException catch (error) {
       print(error);
     }
-  }
-
-  Future<void> _createUserDatabaseEntry(String uid, String email, String username) async {
-    await _firestore.collection('users').doc(uid).set({
-      'uid': uid,
-      'email': email,
-      'username': username,
-      'createdAt': Timestamp.now(),
-    });
   }
 
   void _navLogin(BuildContext context) {

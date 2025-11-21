@@ -1,7 +1,7 @@
 import 'package:bricd_up/swipeable_pages.dart';
 import 'package:bricd_up/components/google_sign_in.dart';
 import 'package:bricd_up/constants/app_colors.dart';
-import 'package:bricd_up/models/user.dart';
+import 'package:bricd_up/models/user_profile.dart';
 import 'package:bricd_up/pages/feed.dart';
 import 'package:bricd_up/pages/register.dart';
 import 'package:bricd_up/providers/user_provider.dart';
@@ -209,7 +209,7 @@ class _LoginState extends State<Login> {
     Map<String, dynamic>? profileData = await _fetchUserProfileData(user.uid);
 
     if (profileData != null) {
-      final UserProfile userProfile = UserProfile.fromMap(profileData);
+      final UserProfile userProfile = UserProfile.fromMap(user.uid, profileData);
 
       final model = Provider.of<UserProvider>(context, listen: false);
 
