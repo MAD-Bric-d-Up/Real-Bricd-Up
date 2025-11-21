@@ -1,5 +1,6 @@
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:bricd_up/models/friend_request_model.dart';
+import 'package:bricd_up/models/user_profile.dart';
 import 'package:bricd_up/repository/friend_request_repo.dart';
 import 'package:bricd_up/repository/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,13 +85,11 @@ class _AlertsState extends State<Alerts> {
   }
 
   Widget _buildRequestBlock(BuildContext context, FriendRequestModel request) {
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Colors.black,
           border: Border.symmetric(horizontal: BorderSide(
               color: Colors.black87,
               width: 1.5,
@@ -100,37 +99,75 @@ class _AlertsState extends State<Alerts> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FutureBuilder(
-                  future: UserRepo.instance.fetchUserProfile(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text(
-                        'Loading sender',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder(
+                    future: UserRepo.instance.fetchUserProfileByUid(request.senderUid),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text(
+                          'Loading sender',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        );
+                      }
+
+                      if (snapshot.hasError) {
+                        return const Text('User Fetch Error');
+                      }
+
+                      final String senderUid = request.senderUid;
+                      final String senderUsername = snapshot.data!.username;
+                      final String alertText = 'Incoming request from @$senderUsername';
+
+                      
+
+                      return Row(
+                        children: [
+                          Text(
+                            alertText,
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          const Spacer(),
+
+                          ElevatedButton(
+                            onPressed: () async {
+                              final String recipientUid = FirebaseAuth.instance.currentUser!.uid;
+                              await FriendRequestRepo.instance.acceptFriendRequest(request.uid, senderUid, recipientUid);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(0, 35),
+                              maximumSize: const Size(100, 35),
+                              backgroundColor: AppColors.navbarGold,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              side: const BorderSide(
+                                color: Colors.black,
+                                width: 1.0
+                              )
+                            ),
+                            child: Text(
+                              'Accept',
+                              style: const TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )
+                        ],
                       );
-                    }
-
-                    if (snapshot.hasError) {
-                      return const Text('User Fetch Error');
-                    }
-
-                    final String username = snapshot.data!.username;
-                    final String alertText = 'Incoming friend request from @$username';
-
-                    return Text(
-                      alertText,
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    );
-                  },
-                )
-              ],
+                    },
+                  )
+                ],
+              )
             )
           ],
         ),

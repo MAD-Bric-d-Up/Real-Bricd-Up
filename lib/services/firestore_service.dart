@@ -51,6 +51,26 @@ class FirestoreService {
     }
   }
 
+  Future<Map<String, dynamic>?> getUserDataByUid(String uid) async {
+    try {
+      final QuerySnapshot snapshot = await usersCollection
+        .where('uid', isEqualTo: uid)
+        .limit(1)
+        .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final DocumentSnapshot doc = snapshot.docs.first;
+        final Map<String, dynamic>? userData = doc.data() as Map<String, dynamic>?;
+
+        return userData;
+      }
+      return null;
+    } catch (e) {
+      print('error fetching user by uid: $e');
+      return null;
+    }
+  }
+
   // add a single user document
   Future<void> createUserDatabaseEntry(String uid, String email, String username) async {
     await _firestore.collection('users').doc(uid).set({

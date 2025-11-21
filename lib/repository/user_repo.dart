@@ -10,7 +10,7 @@ class UserRepo {
 
   UserRepo._internal();
 
-  // Retrieves a User via uid
+  // Retrieves the current User via uid
   Future<UserProfile?> fetchUserProfile() async {
     final User? authUser = FirebaseAuth.instance.currentUser;
 
@@ -54,6 +54,20 @@ class UserRepo {
       return UserProfile.fromMap(uid, rawData);
     } catch (e) {
       print('Error in userrepo fetchuserprofilebyusername: $e');
+      return null;
+    }
+  }
+
+  Future<UserProfile?> fetchUserProfileByUid(String uid) async {
+    try {
+      final Map<String, dynamic>? rawData = await FirestoreService.instance.getUserDataByUid(uid);
+      if  (rawData == null) {
+        return null;
+      }
+
+      return UserProfile.fromMap(uid, rawData);
+    } catch (e) {
+      print('error in userrepo fetchuser by uid: $e');
       return null;
     }
   }
