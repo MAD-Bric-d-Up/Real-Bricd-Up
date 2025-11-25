@@ -1,3 +1,5 @@
+import 'package:bricd_up/pages/alerts.dart';
+import 'package:bricd_up/pages/search.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
@@ -21,6 +23,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       backgroundColor: AppColors.primaryBeige,
+      leading: IconButton(onPressed: null, icon: Icon(Icons.add)),
+      actions: <Widget>[
+
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Search()
+              )
+            );
+          },
+        ),
+
+        IconButton(
+          icon: Icon(Icons.notifications),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Alerts()
+              )
+            );
+          },
+        )
+        
+      ],
     );
   }
 

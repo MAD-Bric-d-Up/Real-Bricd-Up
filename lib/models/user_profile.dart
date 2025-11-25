@@ -14,11 +14,11 @@ class UserProfile extends ChangeNotifier {
     required this.createdAt,
   });
 
-  factory UserProfile.fromMap(Map<String, dynamic> data) {
+  factory UserProfile.fromMap(String uid, Map<String, dynamic> data) {
     return UserProfile(
-      uid: data['uid'] ?? '',
-      email: data['email'] ?? '',
-      username: data['username'] ?? '',
+      uid: uid,
+      email: data['email'] as String? ?? '',
+      username: data['username'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
   }
