@@ -12,7 +12,12 @@
           "package_name": "com.example.bricd_up"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "848693712083-rjt9rbfeaoc75u9u18dirhs04r8t1rso.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBqAZIwyQBUzoldGDN5h5zme-LilZhRCfg"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848693712083-rjt9rbfeaoc75u9u18dirhs04r8t1rso.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "848693712083-c2606rrgaioic681fp3tr1qhrchn6at8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bricdUp"
+              }
+            }
+          ]
         }
       }
     }

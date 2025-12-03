@@ -10,6 +10,7 @@ import 'firebase_options.dart';
 import 'package:bricd_up/pages/login.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
