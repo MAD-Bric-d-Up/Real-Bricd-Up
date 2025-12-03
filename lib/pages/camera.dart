@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:bricd_up/constants/app_colors.dart';
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Camera extends StatefulWidget {
   final CameraDescription camera;
@@ -23,6 +26,8 @@ class _CameraState extends State<Camera> {
 
   late List<CameraDescription> _cameras;
   bool _isLoading = true;
+
+
 
   @override
   void initState() {
@@ -93,21 +98,19 @@ class _CameraState extends State<Camera> {
 
   void _takePicture() async {
     try {
+
       await _initializeControllerFuture;
       final image = await _controller.takePicture();
-
-      print('${image?.path}');
-
-      if(image == null) return;
 
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
       Reference storageRef = FirebaseStorage.instance.ref();
-      Reference referenceDirImages = storageRef.child('images');
-
-      Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
-
-      imageToUpload.putFile(File(image.path));
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) return;
+        Reference referenceDirImages = storageRef.child('images/${user.uid}');
+        Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
+        imageToUpload.putFile(File(image.path));
+      });
 
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
@@ -134,8 +137,6 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
       body: Image.file(File(imagePath)),
     );
   }
