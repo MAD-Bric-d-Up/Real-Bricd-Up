@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class SearchModel extends ChangeNotifier {
   final String uid;
-  final String userUid;
-  final String username;
+  final String searcherUid;
+  final String searcherUsername;
   final String searchContent;
   final DateTime createdAt;
 
   SearchModel({
     required this.uid,
-    required this.userUid,
-    required this.username,
+    required this.searcherUid,
+    required this.searcherUsername,
     required this.searchContent,
     required this.createdAt,
   });
@@ -19,8 +19,8 @@ class SearchModel extends ChangeNotifier {
   factory SearchModel.fromMap(String uid, Map<String, dynamic> data) {
     return SearchModel(
       uid: uid,
-      userUid: data['userUid'] as String? ?? '',
-      username: data['username'] as String? ?? '',
+      searcherUid: data['userUid'] as String? ?? '',
+      searcherUsername: data['username'] as String? ?? '',
       searchContent: data['searchContent'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
@@ -29,8 +29,8 @@ class SearchModel extends ChangeNotifier {
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
-      'userUid': userUid,
-      'username': username,
+      'searcherUid': searcherUid,
+      'searcherUsername': searcherUsername,
       'searchContent': searchContent,
       'createdAt': createdAt,
     };

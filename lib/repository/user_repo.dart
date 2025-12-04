@@ -1,4 +1,5 @@
 import 'package:bricd_up/models/friend_model.dart';
+import 'package:bricd_up/models/search_model.dart';
 import 'package:bricd_up/models/user_profile.dart';
 import 'package:bricd_up/services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -99,6 +100,42 @@ class UserRepo {
     } catch (e) {
       print('error counting friends: $e');
       return 71005;
+    }
+  }
+
+  Future<List<SearchModel>> getUserPastSearches(String userUid) async {
+    try {
+      final QuerySnapshot snapshot = await FirestoreService.instance.getPastSearches(userUid);
+
+      final Set<String> distinctSearches = {};
+      final List<DocumentSnapshot> distinctDocs = [];
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        if (data.containsKey('searchContent') && data['searchContent'] is String) {
+          final content = data['searchContent'] as String;
+
+          if (distinctSearches.add(content)) {
+            distinctDocs.add(doc);
+          }
+        }
+      }
+
+      List<SearchModel> bullshit =  distinctDocs.map((doc) {
+        final docId = doc.id;
+        final dataMap = doc.data() as Map<String, dynamic>;
+        return SearchModel.fromMap(docId, dataMap);
+      }).toList();
+
+      while (bullshit.length > 3) {
+        bullshit.removeLast();
+      }
+
+      return bullshit;
+    } catch (e) {
+      print('error in user repo getting past searches $e');
+      return [];
     }
   }
 }
