@@ -35,3 +35,25 @@ $ flutterfire.bat configure --project=bric-d-up
 
 To run locally on chrome:  
 $ flutter run -d chrome  
+
+## Loading Feed
+
+I had to download Google Cloud SDK on the web and then after setting it up I ran in command prompt/powershell terminal
+
+Created a file named cors.json with following code
+
+[
+  {
+    "origin": ["http://localhost:*", "*"],
+    "method": ["GET", "HEAD"],
+    "maxAgeSeconds": 3600
+  }
+]
+
+$ gcloud auth login
+
+$ gcloud auth list
+
+$ gsutil cors set <path-to-cors.json-file> gs://bric-d-up.firestore.app
+
+
