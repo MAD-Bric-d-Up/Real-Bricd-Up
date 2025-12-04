@@ -103,6 +103,7 @@ class UserRepo {
     }
   }
 
+  // Retrieves User's Past Searches
   Future<List<SearchModel>> getUserPastSearches(String userUid) async {
     try {
       final QuerySnapshot snapshot = await FirestoreService.instance.getPastSearches(userUid);
