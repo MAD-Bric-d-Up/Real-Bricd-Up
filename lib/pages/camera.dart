@@ -1,16 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:bricd_up/constants/app_colors.dart';
+import 'package:bricd_up/services/firestore_service.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Camera extends StatefulWidget {
@@ -133,15 +129,20 @@ class DisplayPictureScreen extends StatelessWidget {
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
       Reference storageRef = FirebaseStorage.instance.ref();
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) async {
         if (user == null) return;
         Reference referenceDirImages = storageRef.child('images/${user.uid}');
         Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
-        imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
+        await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
+
+        final downloadUrl = await imageToUpload.getDownloadURL();
+
+        // print(downloadUrl);
+        FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
       });
 
       return Scaffold(
-        appBar: AppBar(title: Text('${imagePath} Display the Picture')),
+        appBar: AppBar(title: Text('Upload Picture?')),
         body:
           Image.network(imagePath),
       );
@@ -150,15 +151,19 @@ class DisplayPictureScreen extends StatelessWidget {
       String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
 
       Reference storageRef = FirebaseStorage.instance.ref();
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      FirebaseAuth.instance.authStateChanges().listen((User? user) async{
         if (user == null) return;
         Reference referenceDirImages = storageRef.child('images/${user.uid}');
         Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
         imageToUpload.putFile(File(imagePath));
+
+        final downloadUrl = imageToUpload.getDownloadURL();
+
+        FirestoreService.instance.createImageDatabaseEntry(user.uid, await downloadUrl);
       });
 
       return Scaffold(
-        appBar: AppBar(title: Text('${imagePath} Display the Picture')),
+        appBar: AppBar(title: Text('Upload Picture?')),
         body:
         Image.file(File(imagePath)),
       );
