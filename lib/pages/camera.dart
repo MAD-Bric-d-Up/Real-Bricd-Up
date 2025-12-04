@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:developer';
 
 class Camera extends StatefulWidget {
   final CameraDescription camera;
@@ -122,22 +123,21 @@ class DisplayPictureScreen extends StatelessWidget {
 
   const DisplayPictureScreen({super.key, required this.imagePath, required this.data});
 
-  void _submitPicture() async {
-    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-    Reference storageRef = FirebaseStorage.instance.ref();
-    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-      if (user == null) return;
-      Reference referenceDirImages = storageRef.child('images/${user.uid}');
-      Reference imageToUpload = referenceDirImages.child('$uniqueFileName.jpg');
-      await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
-
-      final downloadUrl = await imageToUpload.getDownloadURL();
-
-      FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
-
-    });
-  }
+  // void _submitPicture() async {
+  //   String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+  //
+  //   Reference storageRef = FirebaseStorage.instance.ref();
+  //   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+  //     if (user == null) return;
+  //     Reference referenceDirImages = storageRef.child('images/${user.uid}');
+  //     Reference imageToUpload = referenceDirImages.child('$uniqueFileName.jpg');
+  //     await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
+  //
+  //     final downloadUrl = await imageToUpload.getDownloadURL();
+  //
+  //     FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +163,19 @@ class DisplayPictureScreen extends StatelessWidget {
               ),
               FilledButton(
                 onPressed: () {
-                  _submitPicture;
+                  String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+                  Reference storageRef = FirebaseStorage.instance.ref();
+                  FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+                    if (user == null) return;
+                    Reference referenceDirImages = storageRef.child('images/${user.uid}');
+                    Reference imageToUpload = referenceDirImages.child('$uniqueFileName.jpg');
+                    await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
+
+                    final downloadUrl = await imageToUpload.getDownloadURL();
+
+                    FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
+                  });
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.green)),
