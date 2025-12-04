@@ -122,46 +122,42 @@ class DisplayPictureScreen extends StatelessWidget {
 
   const DisplayPictureScreen({super.key, required this.imagePath, required this.data});
 
+  void _submitPicture() async {
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    Reference storageRef = FirebaseStorage.instance.ref();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      if (user == null) return;
+      Reference referenceDirImages = storageRef.child('images/${user.uid}');
+      Reference imageToUpload = referenceDirImages.child('$uniqueFileName.jpg');
+      await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
+
+      final downloadUrl = await imageToUpload.getDownloadURL();
+
+      FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     if(kIsWeb) {
-      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      Reference storageRef = FirebaseStorage.instance.ref();
-      FirebaseAuth.instance.authStateChanges().listen((User? user) async {
-        if (user == null) return;
-        Reference referenceDirImages = storageRef.child('images/${user.uid}');
-        Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
-        await imageToUpload.putData(data, SettableMetadata(contentType: "image/jpeg"));
-
-        final downloadUrl = await imageToUpload.getDownloadURL();
-
-        // print(downloadUrl);
-        FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
-      });
-
       return Scaffold(
+        backgroundColor: AppColors.primaryGreen,
         appBar: AppBar(title: Text('Upload Picture?')),
-        body:
-          Image.network(imagePath),
+        body: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children:
+            <Widget>[
+              Image.network(imagePath),
+              FilledButton(onPressed: _submitPicture, child: Text("Submit"), style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.green)),)
+            ],
+        ),
+        ),
       );
     } else {
-
-      String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      Reference storageRef = FirebaseStorage.instance.ref();
-      FirebaseAuth.instance.authStateChanges().listen((User? user) async{
-        if (user == null) return;
-        Reference referenceDirImages = storageRef.child('images/${user.uid}');
-        Reference imageToUpload = referenceDirImages.child('${uniqueFileName}.jpg');
-        imageToUpload.putFile(File(imagePath));
-
-        final downloadUrl = imageToUpload.getDownloadURL();
-
-        FirestoreService.instance.createImageDatabaseEntry(user.uid, await downloadUrl);
-      });
-
       return Scaffold(
         appBar: AppBar(title: Text('Upload Picture?')),
         body:
