@@ -59,6 +59,17 @@ class _OtherProfileState extends State<OtherProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
 
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  color: Colors.white,
+                ),
+              ),
+
               // profile picture
               Container(
                 width: 150.0,
