@@ -135,6 +135,7 @@ class DisplayPictureScreen extends StatelessWidget {
       final downloadUrl = await imageToUpload.getDownloadURL();
 
       FirestoreService.instance.createImageDatabaseEntry(user.uid, downloadUrl);
+
     });
   }
 
@@ -152,9 +153,25 @@ class DisplayPictureScreen extends StatelessWidget {
           children:
             <Widget>[
               Image.network(imagePath),
-              FilledButton(onPressed: _submitPicture, child: Text("Submit"), style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.green)),)
+              const SizedBox(height: 32.0),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [FilledButton(
+                  onPressed: () {Navigator.pop(context);},
+                  style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white)),
+                  child: Text("Cancel", style: TextStyle(color: Colors.black),)
+              ),
+              FilledButton(
+                onPressed: () {
+                  _submitPicture;
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.green)),
+                child: Text("Submit"),
+              )
+              ]),
             ],
-        ),
+          ),
         ),
       );
     } else {
