@@ -77,10 +77,14 @@ class _OtherProfileState extends State<OtherProfile> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 5.0,
-                  )
+                  // border: Border.all(
+                  //   color: Colors.black,
+                  //   width: 5.0,
+                  // )
+                ),
+                child: Icon(
+                  Icons.person,
+                  size: 150.0,  
                 ),
               ),
 

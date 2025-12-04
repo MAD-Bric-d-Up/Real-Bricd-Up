@@ -27,7 +27,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       backgroundColor: AppColors.primaryGreen,
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -76,9 +76,6 @@ class _FeedState extends State<Feed> {
   }
 
   Widget _buildFriendPosts(List<Post> posts, double screenHeight) {
-    posts.forEach((post) {
-      print('${post.imageURL} + ${post.username}');
-    });
 
     if (_isLoading) {
       return SizedBox(
@@ -95,16 +92,19 @@ class _FeedState extends State<Feed> {
         itemBuilder: (context, index) {
           final post = posts[index];
           return Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2.0
+            ),
             decoration: BoxDecoration(
-              border: Border.symmetric(
-                horizontal: BorderSide(
-                  color: Colors.black87,
-                  width: 1.5,
-                )
-              )
+              // border: Border.symmetric(
+              //   horizontal: BorderSide(
+              //     color: Colors.black87,
+              //     width: 1.5,
+              //   )
+              // )
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(2.0),
               child: Column(
                 children: [
                   // data above picture
@@ -120,16 +120,17 @@ class _FeedState extends State<Feed> {
                             color: Colors.white,
                             border: Border.all(
                               color: Colors.black,
-                              width: 5.0,
+                              width: 0.0,
                             )
                           ),
+                          child: Icon(Icons.person),
                         ),
                       ),
 
                       const SizedBox(width: 8.0,),
 
                       Text(
-                        '${post.username}',
+                        post.username,
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w600,
@@ -188,12 +189,16 @@ class _FeedState extends State<Feed> {
                         onPressed: () {
                           
                         }, 
-                        icon: Icon(Icons.thumb_up)
+                        icon: Icon(Icons.thumb_up),
+                        color: Colors.white,
                       ),
 
                       IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.message)
+                        onPressed: () {
+
+                        },
+                        icon: Icon(Icons.message),
+                        color: Colors.white,
                       ),
 
                     ],

@@ -58,7 +58,7 @@ class _AlertsState extends State<Alerts> {
 
             if (requests.isEmpty) {
               return const Center(child: Text(
-                'No pending friend requests, you lonely bitch',
+                'No pending friend requests...',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 20.0,
