@@ -176,4 +176,16 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  Future<QuerySnapshot> getPastSearches(String userUid) async {
+    try {
+      return await searchesCollection
+        .where('searcherUid', isEqualTo: userUid)
+        .orderBy('createdAt', descending: true)
+        .get();
+    } catch (e) {
+      print('error retrieving past searches: $e');
+      rethrow;
+    }
+  }
 }

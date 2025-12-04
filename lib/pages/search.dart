@@ -21,6 +21,14 @@ class _SearchState extends State<Search> {
   UserProfile? _foundUser;
   bool _isLoading = false;
 
+  late Future<List<SearchModel>> _pastSearches;
+  bool _pastSearchesIsLoading = false;
+
+  void initState() {
+    super.initState();
+    _pastSearches = UserRepo.instance.getUserPastSearches(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -52,8 +60,8 @@ class _SearchState extends State<Search> {
 
       final SearchModel searchModel = SearchModel(
         uid: "",
-        userUid: uid,
-        username: username,
+        searcherUid: uid,
+        searcherUsername: username,
         searchContent: searchContentString,
         createdAt: Timestamp.now().toDate(),
       );
@@ -95,6 +103,17 @@ class _SearchState extends State<Search> {
           child: Column(
             children: <Widget>[
 
+              Align(
+                alignment: AlignmentGeometry.topLeft,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  color: Colors.white,
+                ),
+              ),
+
               SizedBox(
                 width: double.infinity,
                 child: TextField(
@@ -118,15 +137,20 @@ class _SearchState extends State<Search> {
 
               const SizedBox(height: 8.0,),
 
-              SizedBox(
-                height: screenHeight * .20,
-                width: double.infinity,
-                child: Text(
-                  'past searches',
-                  style: const TextStyle(
-                    backgroundColor: AppColors.primaryBeige
-                  ),
-                ),
+              FutureBuilder<List<SearchModel>>(
+                future: _pastSearches, 
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    List<SearchModel> searches = snapshot.data!;
+                    return _buildPastSearches(searches);
+                  } else {
+                    return const Center();
+                  }
+                }
               ),
 
               const SizedBox(height: 8.0,),
@@ -159,6 +183,7 @@ class _SearchState extends State<Search> {
     } else if (_foundUser != null) {
       final String _foundUsername = _foundUser!.username;
       return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           Navigator.push(
             context,
@@ -220,5 +245,82 @@ class _SearchState extends State<Search> {
     } else {
       return SizedBox();
     }
+  }
+
+  Widget _buildPastSearches(List<SearchModel> searches) {
+    
+    return ListView.builder(
+      itemCount: searches.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final search = searches[index];
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () async {
+            // Fetch the profile by uid, await the Future so we pass a UserProfile to OtherProfile
+            final UserProfile? userProfile = await UserRepo.instance.fetchUserProfileByUsername(search.searchContent);
+
+            if (userProfile != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OtherProfile(
+                    userProfile: userProfile,
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('User not found')),
+              );
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 50.0,
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                       border: Border.all(
+                        color: Colors.black,
+                        width: 5.0,
+                      ),
+                    ),
+                    ),
+
+                  const SizedBox(width: 8.0),
+
+                  Text(
+                    '@${search.searchContent}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  const Icon(Icons.arrow_right)
+
+                ],
+              ),
+            ),
+          ),
+        )
+        ;
+      }
+    );
   }
 }
