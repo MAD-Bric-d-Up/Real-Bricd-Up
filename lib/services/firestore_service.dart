@@ -200,4 +200,17 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  Future<QuerySnapshot> getUserLatestPost(String uid) async {
+    try {
+      return await imagesCollection
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .limit(1)
+        .get();
+    } catch (e) {
+      print('error retireiveing latest friend post in firestore service $e');
+      rethrow;
+    }
+  }
 }

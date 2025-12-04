@@ -221,6 +221,7 @@ class _RegisterState extends State<Register> {
       // show something on the screen
     } else {
       _doRegister(email, username, password);
+      _navLogin(context);
     }
   }
 
