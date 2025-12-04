@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '848693712083',
     projectId: 'bric-d-up',
     storageBucket: 'bric-d-up.firebasestorage.app',
+    iosClientId: '848693712083-c2606rrgaioic681fp3tr1qhrchn6at8.apps.googleusercontent.com',
     iosBundleId: 'com.example.bricdUp',
   );
 
@@ -72,6 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '848693712083',
     projectId: 'bric-d-up',
     storageBucket: 'bric-d-up.firebasestorage.app',
+    iosClientId: '848693712083-c2606rrgaioic681fp3tr1qhrchn6at8.apps.googleusercontent.com',
     iosBundleId: 'com.example.bricdUp',
   );
 
@@ -83,4 +85,5 @@ class DefaultFirebaseOptions {
     authDomain: 'bric-d-up.firebaseapp.com',
     storageBucket: 'bric-d-up.firebasestorage.app',
   );
+
 }

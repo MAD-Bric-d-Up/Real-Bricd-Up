@@ -11,6 +11,7 @@ class FirestoreService {
   CollectionReference get usersCollection => _firestore.collection('users');
   CollectionReference get searchesCollection => _firestore.collection('searches');
   CollectionReference get friendRequestsCollection => _firestore.collection('friend_requests');
+  CollectionReference get imagesCollection => _firestore.collection('images');
 
   // retrieve single user document
   Future<Map<String, dynamic>?> getUserData(String uid) async {
@@ -175,6 +176,17 @@ class FirestoreService {
       print('error retrieving friend requests for a user: $e');
       rethrow;
     }
+  }
+
+  Future<void> createImageDatabaseEntry(String uid, String imageURL) async {
+    await _firestore
+        .collection('images')
+        .doc()
+        .set({
+          'uid': uid,
+          'imageUrl': imageURL,
+          'createdAt': Timestamp.now(),
+        });
   }
 
   Future<QuerySnapshot> getPastSearches(String userUid) async {
