@@ -22,13 +22,14 @@ class UserRepo {
     }
 
     final String uid = authUser.uid;
+    final int friendCount = await countUserFriends(uid);
 
     try {
       final Map<String, dynamic>? rawData = await UserRepo.instance.getUserData(uid);
 
       if (rawData != null) {
         rawData['email'] = authUser.email;
-        return UserProfile.fromMap(uid, rawData);
+        return UserProfile.fromMap(uid, rawData, friendCount);
       } else {
         return null;
       }
@@ -54,7 +55,9 @@ class UserRepo {
         return null;
       }
 
-      return UserProfile.fromMap(uid, rawData);
+      final int friendCount = await countUserFriends(uid);
+
+      return UserProfile.fromMap(uid, rawData, friendCount);
     } catch (e) {
       print('Error in userrepo fetchuserprofilebyusername: $e');
       return null;
@@ -67,8 +70,9 @@ class UserRepo {
       if  (rawData == null) {
         return null;
       }
+      final int friendCount = await countUserFriends(uid);
 
-      return UserProfile.fromMap(uid, rawData);
+      return UserProfile.fromMap(uid, rawData, friendCount);
     } catch (e) {
       print('error in userrepo fetchuser by uid: $e');
       return null;

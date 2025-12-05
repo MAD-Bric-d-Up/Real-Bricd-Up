@@ -49,10 +49,19 @@ class _OtherProfileState extends State<OtherProfile> {
   @override
   Widget build(BuildContext context) {
     final String usernameText = widget.userProfile.username;
+    final int friendCount = widget.userProfile.friendCount;
     return Scaffold(
       appBar: CustomAppBar(),
       backgroundColor: AppColors.primaryGreen,
+      //bottomNavigationBar: Navbar(tabController: widget.tabController),
       body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+                maxHeight: 150,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
@@ -87,46 +96,131 @@ class _OtherProfileState extends State<OtherProfile> {
                   size: 150.0,  
                 ),
               ),
+              child: Card (
+                color: Colors.white,
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding (
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // profile picture
+                      Container(
+                        width: 125.0,
+                        height: 125.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primaryGreen,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 5.0,
+                          )
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            // username and shi
+                            Text(
+                              usernameText,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black
+                              ),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                "Friends: " + friendCount!.toString(),
+                                style: const TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                "Posts: 0", // + postCount
+                                style: const TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            // friend button
+                            FutureBuilder<FriendRequestStatus>(
+                              future: _friendRequestStatus,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                }
+                                if (snapshot.hasError) {
+                                  return const CircularProgressIndicator();
+                                }
 
-              // username and shi
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '@$usernameText',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black
+                                if (snapshot.hasData) {
+                                  final FriendRequestStatus data = snapshot.data!;
+
+                                  return FriendRequestButton(
+                                    recipientProfile: data.recipientProfile,
+                                    initialIsSent: data.isRequestSent
+                                  );
+                                }
+                                return SizedBox.shrink();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
 
-              // friend button
-              FutureBuilder<FriendRequestStatus>(
-                future: _friendRequestStatus,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (snapshot.hasError) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  if (snapshot.hasData) {
-                    final FriendRequestStatus data = snapshot.data!;
-
-                    return FriendRequestButton(
-                      recipientProfile: data.recipientProfile,
-                      initialIsSent: data.isRequestSent
-                    );
-                  }
-                  return SizedBox.shrink();
-                },
-              )
-            ],
-          ),
-        ),
-      )
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+                maxHeight: 800,
+              ),
+              child: Card (
+                color: Colors.white,
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding (
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // posts will go here
+                      Text(
+                        "<Posts will appear here>",
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ),
     );
   }
 }
