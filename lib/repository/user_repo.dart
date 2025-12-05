@@ -170,7 +170,7 @@ class UserRepo {
       await Future.wait(friendPosts.map((post) async {
         final Map<String, dynamic>? userMap = await FirestoreService.instance.getUserDataByUid(post.uid);
         if (userMap != null) {
-          final UserProfile? user = UserProfile.fromMap(post.uid, userMap);
+          final UserProfile? user = UserProfile.fromMap(post.uid, userMap, 0);
           if (user != null) {
             post.username = user.username;
           }

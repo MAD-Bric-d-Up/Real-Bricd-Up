@@ -34,28 +34,6 @@ class _Profile extends State<Profile> {
                   constraints: const BoxConstraints(
                     maxWidth: 500,
                     maxHeight: 150,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-
-                  // profile picture
-                  Container(
-                    width: 150.0,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      // border: Border.all(
-                      //   color: Colors.black,
-                      //   width: 5.0,
-                      // )
-                    ),
-                    child: Icon(
-                      Icons.person,
-                      size: 150.0,
-                    ),
                   ),
                   child: Card (
                     color: Colors.white,
@@ -79,6 +57,10 @@ class _Profile extends State<Profile> {
                                 color: Colors.black,
                                 width: 5.0,
                               )
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              size: 100.0,
                             ),
                           ),
                           const SizedBox(width: 10),
