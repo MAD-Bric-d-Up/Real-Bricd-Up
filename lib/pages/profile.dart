@@ -22,59 +22,130 @@ class _Profile extends State<Profile> {
         final UserProfile? user = snapshot.data;
         final String? emailText = user?.email;
         final String? usernameText = user?.username;
-
+        final int? friendCount = user?.friendCount;
+        
         return Scaffold(
           backgroundColor: AppColors.primaryGreen,
           body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 500,
+                    maxHeight: 150,
+                  ),
+                  child: Card (
+                    color: Colors.white,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding (
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // profile picture
+                          Container(
+                            width: 125.0,
+                            height: 125.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.primaryGreen,
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 5.0,
+                              )
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                // username and shi
+                                Text(
+                                  usernameText!,
+                                  style: const TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black
+                                  ),
+                                ),
 
-                  // profile picture
-                  Container(
-                    width: 150.0,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 5.0,
-                      )
+                                Text(
+                                  emailText!,
+                                  style: const TextStyle(
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                    "Friends: " + friendCount!.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                    "Posts: 0", // + postCount
+                                    style: const TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                ),
 
-                  // username and shi
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      emailText!,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black
-                      ),
-                    )
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxWidth: 500,
+                    maxHeight: 800,
                   ),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      usernameText!,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black
+                  child: Card (
+                    color: Colors.white,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding (
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // posts will go here
+                          Text(
+                            "<Posts will appear here>",
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-
-
-                ],
-              ),
-            ),
+                  ),
+                ),
+              ],
+            )
           )
         );
       } // builder
