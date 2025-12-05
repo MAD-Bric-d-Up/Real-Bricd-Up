@@ -216,11 +216,12 @@ class _SearchState extends State<Search> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 5.0,
-                    )
+                    // border: Border.all(
+                    //   color: Colors.black,
+                    //   width: 5.0,
+                    // )
                   ),
+                  child: Icon(Icons.person),
                 ),
 
                 const SizedBox(width: 8.0,),
@@ -292,11 +293,14 @@ class _SearchState extends State<Search> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
-                       border: Border.all(
-                        color: Colors.black,
-                        width: 5.0,
-                      ),
+                      //  border: Border.all(
+                      //   color: Colors.black,
+                      //   width: 5.0,
+                      // ),
                     ),
+                    child: Icon(
+                      Icons.person,
+                      ),
                     ),
 
                   const SizedBox(width: 8.0),

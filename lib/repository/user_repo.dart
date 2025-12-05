@@ -1,9 +1,11 @@
 import 'package:bricd_up/models/friend_model.dart';
+import 'package:bricd_up/models/post.dart';
 import 'package:bricd_up/models/search_model.dart';
 import 'package:bricd_up/models/user_profile.dart';
 import 'package:bricd_up/services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class UserRepo {
 
@@ -107,6 +109,7 @@ class UserRepo {
     }
   }
 
+  // Retrieves User's Past Searches
   Future<List<SearchModel>> getUserPastSearches(String userUid) async {
     try {
       final QuerySnapshot snapshot = await FirestoreService.instance.getPastSearches(userUid);
@@ -139,6 +142,55 @@ class UserRepo {
       return bullshit;
     } catch (e) {
       print('error in user repo getting past searches $e');
+      return [];
+    }
+  }
+
+  Future<List<Post>> getFriendPosts(String userUid) async {
+    try {
+      final QuerySnapshot snapshot = await FirestoreService.instance.getSubcollection('users', userUid, 'friends');
+      List<String> friendUids = snapshot.docs.map((doc) => doc.id).toList();
+      
+      List<Future<QuerySnapshot>> postFutures = friendUids.map((uid) {
+        return FirestoreService.instance.getUserLatestPost(uid);
+      }).toList();
+
+
+
+      List<QuerySnapshot> allPostSnapshots = await Future.wait(postFutures);
+
+      List<Post> friendPosts = allPostSnapshots
+        .expand((snapshot) => snapshot.docs)
+        .map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+
+          return Post.fromMap(data, doc.id);
+        }).toList();
+
+      await Future.wait(friendPosts.map((post) async {
+        final Map<String, dynamic>? userMap = await FirestoreService.instance.getUserDataByUid(post.uid);
+        if (userMap != null) {
+          final UserProfile? user = UserProfile.fromMap(post.uid, userMap);
+          if (user != null) {
+            post.username = user.username;
+          }
+        }
+      }));
+
+      friendPosts.sort((a, b) {
+        return b.createdAt.compareTo(a.createdAt);
+      });
+
+      final formatter = DateFormat('MMM, dd hh:mm a');
+
+      friendPosts.forEach((post) {
+        post.formattedTime = formatter.format(post.createdAt);
+      });
+
+      return friendPosts;
+      
+    } catch (e) {
+      print('error getting friends posts userrepo $e');
       return [];
     }
   }
