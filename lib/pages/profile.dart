@@ -19,6 +19,10 @@ class _Profile extends State<Profile> {
       future: UserRepo.instance.fetchUserProfile(),
       builder: (context, snapshot) {
 
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        } else {
+
         final UserProfile? user = snapshot.data;
         final String? emailText = user?.email;
         final String? usernameText = user?.username;
@@ -152,7 +156,8 @@ class _Profile extends State<Profile> {
             )
           )
         );
-      } // builder
+      }
+    } // builder
     );
   }
 }
